@@ -50,10 +50,21 @@ public class TriagemDAO {
                 t.setNmCidade(rs.getString("nm_cidade"));
 
 
-
                 lista.add(t);
             }
         }
         return lista;
+    }
+
+    public void cadastrar(Triagem triagem) throws SQLException {
+        String sql = "INSERT INTO T_BC_TRIAGEM (dt_triagem, hr_inicial, hr_final, id_endereco) VALUES (?, ?, ?, ?)";
+        try (Connection conn = DatabaseConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setDate(1, java.sql.Date.valueOf(triagem.getDtTriagem()));
+            ps.setTime(2, java.sql.Time.valueOf(triagem.getHrInicial()));
+            ps.setTime(3, java.sql.Time.valueOf(triagem.getHrFinal()));
+            ps.setInt(4, triagem.getIdEndereco());
+            ps.executeUpdate();
+        }
     }
 }
