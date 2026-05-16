@@ -11,6 +11,7 @@ public class PreBeneficiario {
     private int idProgramaSocial;
     private int idSolicitante;
     private int idEndereco;
+    private int idTriagem;
     private Endereco endereco;
 
     public PreBeneficiario() {
@@ -29,6 +30,7 @@ public class PreBeneficiario {
         this.idSolicitante = idSolicitante;
         this.idEndereco = idEndereco;
     }
+
 
     public int getIdPreBeneficiario() {
         return idPreBeneficiario;
@@ -102,9 +104,28 @@ public class PreBeneficiario {
         this.idEndereco = idEndereco;
     }
 
-    public Endereco getEndereco() { return endereco; }
-    public void setEndereco(Endereco endereco) { this.endereco = endereco; }
+    public Endereco getEndereco() {
+        return endereco;
+    }
 
-    public String getDtNascimento() { return dtNascimento; }
-    public void setDtNascimento(String dtNascimento) { this.dtNascimento = dtNascimento; }
+    public void setEndereco(Endereco endereco) {
+        this.endereco = endereco;
+    }
+
+    public String getDtNascimento() {
+        return dtNascimento;
+    }
+
+    public void setDtNascimento(String dtNascimento) {
+        this.dtNascimento = dtNascimento;
+    }
+
+
+    public int getIdTriagem() {
+        return idTriagem;
+    }
+
+    public void setIdTriagem(int idTriagem) {
+        this.idTriagem = idTriagem;
+    }
 }

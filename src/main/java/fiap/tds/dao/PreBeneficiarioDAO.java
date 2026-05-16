@@ -91,15 +91,22 @@ public class PreBeneficiarioDAO {
         String sqlPre = "INSERT INTO T_BC_PRE_BENEFICIARIO (nm_pre_beneficiario, dt_nascimento, cpf_pre_beneficiario, sx_pre_beneficiario, ds_problema_dentario, st_situacao, id_programa_social, id_endereco, id_solicitante) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         String sqlUpdateSolicitante = "UPDATE T_BC_SOLICITANTE SET st_solicitante = 'I' WHERE id_solicitante = ?";
 
+        // NOVA QUERY: Para inserir na tabela associativa N:M
+        String sqlRelacaoTriagem = "INSERT INTO T_BC_REL_TRIAGEM_PRE_BENEF (id_triagem, id_pre_beneficiario) VALUES (?, ?)";
+
         Connection conn = null;
         try {
             conn = DatabaseConfig.getConnection();
-            conn.setAutoCommit(false);
+            conn.setAutoCommit(false); // Transação iniciada
 
+            // 1. Cadastra o endereço residencial do Pré-Beneficiário
             EnderecoDAO enderecoDAO = new EnderecoDAO();
             int idEnderecoGerado = enderecoDAO.cadastrar(pb.getEndereco(), conn);
 
-            try (PreparedStatement ps = conn.prepareStatement(sqlPre)) {
+            int idPreBeneficiarioGerado = 0;
+
+            // 2. Cadastra o Pré-Beneficiário pedindo o ID autogerado de volta (ID_PRE_BENEFICIARIO)
+            try (PreparedStatement ps = conn.prepareStatement(sqlPre, new String[]{"ID_PRE_BENEFICIARIO"})) {
                 ps.setString(1, pb.getNmPreBeneficiario());
                 ps.setDate(2, java.sql.Date.valueOf(pb.getDtNascimento()));
                 ps.setString(3, pb.getCpfPreBeneficiario());
@@ -108,20 +115,40 @@ public class PreBeneficiarioDAO {
                 ps.setString(6, pb.getStSituacao());
                 ps.setInt(7, pb.getIdProgramaSocial());
                 ps.setInt(8, idEnderecoGerado);
-                ps.setInt(9, pb.getIdSolicitante()); // Amarra o "filho" ao "pai"
+                ps.setInt(9, pb.getIdSolicitante());
 
                 ps.executeUpdate();
+
+                // Recupera o ID gerado pelo banco para o Pré-Beneficiário
+                try (ResultSet rs = ps.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        idPreBeneficiarioGerado = rs.getInt(1);
+                    }
+                }
             }
 
+            if (idPreBeneficiarioGerado == 0) {
+                throw new SQLException("Falha ao cadastrar Pré-Beneficiário, ID não obtido.");
+            }
+
+            // 3. PASSO DA TRIAGEM: Vincula o ID da triagem selecionado no React com o Pré-Beneficiário criado
+            try (PreparedStatement psRel = conn.prepareStatement(sqlRelacaoTriagem)) {
+                psRel.setInt(1, pb.getIdTriagem()); // Captura o valor idTriagem enviado pelo React
+                psRel.setInt(2, idPreBeneficiarioGerado); // Usa o ID gerado no passo anterior
+                psRel.executeUpdate();
+            }
+
+            // 4. Inativa o solicitante inicial
             try (PreparedStatement psUpd = conn.prepareStatement(sqlUpdateSolicitante)) {
                 psUpd.setInt(1, pb.getIdSolicitante());
                 psUpd.executeUpdate();
             }
 
+            // Confirma todas as alterações com segurança no banco Oracle
             conn.commit();
 
         } catch (SQLException e) {
-            if (conn != null) conn.rollback();
+            if (conn != null) conn.rollback(); // Cancela tudo se houver falhas
             throw e;
         } finally {
             if (conn != null) {
