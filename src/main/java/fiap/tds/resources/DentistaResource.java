@@ -41,7 +41,7 @@ public class DentistaResource {
     @GET
     public Response listarTodos() {
         try {
-            return Response.ok(bo.listar()).build(); // Partindo do princípio que tem um método listar() no BO
+            return Response.ok(bo.listar()).build();
         } catch (SQLException e) {
             return Response.status(500).entity(e.getMessage()).build();
         }

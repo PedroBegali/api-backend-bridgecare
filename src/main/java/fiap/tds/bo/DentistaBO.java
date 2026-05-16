@@ -3,8 +3,8 @@ package fiap.tds.bo;
 import fiap.tds.dao.DentistaDAO;
 import fiap.tds.tdbentities.Dentista;
 import fiap.tds.exceptions.RegraNegocioException;
-
 import java.sql.SQLException;
+import java.util.List;
 
 public class DentistaBO {
 
@@ -33,5 +33,8 @@ public class DentistaBO {
         }
 
         dao.atualizarStatus(id, status.toUpperCase());
+    }
+    public List<Dentista> listar() throws SQLException {
+        return dao.listar();
     }
 }
