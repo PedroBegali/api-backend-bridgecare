@@ -6,6 +6,7 @@ import fiap.tds.infra.DatabaseConfig;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 
 public class EnderecoBO {
 
@@ -16,9 +17,13 @@ public class EnderecoBO {
     }
 
     public void cadastrar(Endereco endereco) throws SQLException {
-        // Abre a conexão autónoma para o endereço de triagem
         try (Connection conn = DatabaseConfig.getConnection()) {
             dao.cadastrar(endereco, conn);
         }
+    }
+
+
+    public List<Endereco> listar() throws SQLException {
+        return dao.listar();
     }
 }

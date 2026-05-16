@@ -30,8 +30,7 @@ public class EnderecoResource {
     @GET
     public Response listarEnderecos() {
         try {
-            fiap.tds.dao.EnderecoDAO dao = new fiap.tds.dao.EnderecoDAO();
-            return Response.ok(dao.listar()).build(); // Partindo do princípio que o seu DAO tem o método listar()
+            return Response.ok(bo.listar()).build();
         } catch (SQLException e) {
             return Response.status(500).entity(e.getMessage()).build();
         }
