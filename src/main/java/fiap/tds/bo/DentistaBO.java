@@ -37,4 +37,19 @@ public class DentistaBO {
     public List<Dentista> listar() throws SQLException {
         return dao.listar();
     }
+    public void cadastrar(Dentista dentista) throws RegraNegocioException, SQLException {
+        if (dentista.getNmDentista() == null || dentista.getNmDentista().trim().isEmpty()) {
+            throw new RegraNegocioException("O nome do profissional é obrigatório.");
+        }
+        if (dentista.getCpfDentista() == null || dentista.getCpfDentista().length() != 11) {
+            throw new RegraNegocioException("O CPF fornecido deve conter exatamente 11 dígitos numéricos.");
+        }
+        if (dentista.getCroDentista() == null || dentista.getCroDentista().trim().isEmpty()) {
+            throw new RegraNegocioException("O número do registro CRO é obrigatório.");
+        }
+
+        // Garante que o status inicial comece ativo 'A' conforme mapeamento do banco
+        dentista.setStDentista("A");
+        dao.cadastrar(dentista);
+    }
 }

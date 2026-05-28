@@ -2,6 +2,7 @@ package fiap.tds.resources;
 
 import fiap.tds.bo.DentistaBO;
 import fiap.tds.exceptions.RegraNegocioException;
+import fiap.tds.tdbentities.Dentista;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -44,6 +45,24 @@ public class DentistaResource {
             return Response.ok(bo.listar()).build();
         } catch (SQLException e) {
             return Response.status(500).entity(e.getMessage()).build();
+        }
+    }
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response cadastrar(Dentista dentista) {
+        try {
+            bo.cadastrar(dentista);
+            return Response.status(Response.Status.CREATED)
+                    .entity("Dentista cadastrado com sucesso!")
+                    .build();
+        } catch (RegraNegocioException e) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(e.getMessage())
+                    .build();
+        } catch (SQLException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Erro interno no banco de dados: " + e.getMessage())
+                    .build();
         }
     }
 }
