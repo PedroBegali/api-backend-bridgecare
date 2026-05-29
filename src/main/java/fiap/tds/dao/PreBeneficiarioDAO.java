@@ -88,8 +88,7 @@ public class PreBeneficiarioDAO {
     }
 
     public void cadastrar(PreBeneficiario pb) throws SQLException {
-        String sqlPre = "INSERT INTO T_BC_PRE_BENEFICIARIO (nm_pre_beneficiario, dt_nascimento, cpf_pre_beneficiario, sx_pre_beneficiario, ds_problema_dentario, st_situacao, id_programa_social, id_endereco, id_solicitante) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        String sqlUpdateSolicitante = "UPDATE T_BC_SOLICITANTE SET st_solicitante = 'I' WHERE id_solicitante = ?";
+        String sqlPre = "INSERT INTO T_BC_PRE_BENEFICIARIO (nm_pre_beneficiario, dt_nascimento, cpf_pre_beneficiario, sx_pre_beneficiario, ds_problema_dentario, st_situacao, id_programa_social, id_endereco, id_solicitante, vl_renda_familiar, st_programa_gov, ds_escolaridade_resp, ds_termo_autorizacao, ds_boletim_ocorrencia) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";        String sqlUpdateSolicitante = "UPDATE T_BC_SOLICITANTE SET st_solicitante = 'I' WHERE id_solicitante = ?";
 
         // NOVA QUERY: Para inserir na tabela associativa N:M
         String sqlRelacaoTriagem = "INSERT INTO T_BC_REL_TRIAGEM_PRE_BENEF (id_triagem, id_pre_beneficiario) VALUES (?, ?)";
@@ -116,6 +115,17 @@ public class PreBeneficiarioDAO {
                 ps.setInt(7, pb.getIdProgramaSocial());
                 ps.setInt(8, idEnderecoGerado);
                 ps.setInt(9, pb.getIdSolicitante());
+
+                // NOVOS CAMPOS
+                if (pb.getVlRendaFamiliar() != null) {
+                    ps.setDouble(10, pb.getVlRendaFamiliar());
+                } else {
+                    ps.setNull(10, Types.NUMERIC);
+                }
+                ps.setString(11, pb.getStProgramaGov());
+                ps.setString(12, pb.getDsEscolaridadeResp());
+                ps.setString(13, pb.getDsTermoAutorizacao());
+                ps.setString(14, pb.getDsBoletimOcorrencia());
 
                 ps.executeUpdate();
 

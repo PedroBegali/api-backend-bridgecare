@@ -13,6 +13,52 @@ public class PreBeneficiario {
     private int idEndereco;
     private int idTriagem;
     private Endereco endereco;
+    private Double vlRendaFamiliar;
+
+    public String getStProgramaGov() {
+        return stProgramaGov;
+    }
+
+    public void setStProgramaGov(String stProgramaGov) {
+        this.stProgramaGov = stProgramaGov;
+    }
+
+    public Double getVlRendaFamiliar() {
+        return vlRendaFamiliar;
+    }
+
+    public void setVlRendaFamiliar(Double vlRendaFamiliar) {
+        this.vlRendaFamiliar = vlRendaFamiliar;
+    }
+
+    public String getDsEscolaridadeResp() {
+        return dsEscolaridadeResp;
+    }
+
+    public void setDsEscolaridadeResp(String dsEscolaridadeResp) {
+        this.dsEscolaridadeResp = dsEscolaridadeResp;
+    }
+
+    public String getDsTermoAutorizacao() {
+        return dsTermoAutorizacao;
+    }
+
+    public void setDsTermoAutorizacao(String dsTermoAutorizacao) {
+        this.dsTermoAutorizacao = dsTermoAutorizacao;
+    }
+
+    public String getDsBoletimOcorrencia() {
+        return dsBoletimOcorrencia;
+    }
+
+    public void setDsBoletimOcorrencia(String dsBoletimOcorrencia) {
+        this.dsBoletimOcorrencia = dsBoletimOcorrencia;
+    }
+
+    private String stProgramaGov;
+    private String dsEscolaridadeResp;
+    private String dsTermoAutorizacao;
+    private String dsBoletimOcorrencia;
 
     public PreBeneficiario() {
     }
